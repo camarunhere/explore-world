@@ -1,0 +1,51 @@
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const mongoose = require('mongoose');
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// MongoDB connection
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log('MongoDB connected to ExploreWorld cluster'))
+  .catch((err) => {
+    console.error('MongoDB connection error:', err.message);
+    process.exit(1);
+  });
+
+// Middleware
+const allowedOrigins = [
+  'http://localhost:5173',
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
+
+// Routes
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/destinations', require('./routes/destinations'));
+app.use('/api/reviews', require('./routes/reviews'));
+
+// Health check
+app.get('/api/health', (req, res) => res.json({ status: 'ExploreWorld API running', version: '2.0.0', db: 'MongoDB' }));
+
+// 404 handler
+app.use((req, res) => res.status(404).json({ message: 'Route not found' }));
+
+// Error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Internal server error' });
+});
+
+app.listen(PORT, () => {
+  console.log(`\n🌍 ExploreWorld API running on http://localhost:${PORT}`);
+  console.log(`📚 Endpoints:`);
+  console.log(`   GET  /api/destinations`);
+  console.log(`   GET  /api/destinations/:id`);
+  console.log(`   POST /api/auth/register`);
+  console.log(`   POST /api/auth/login\n`);
+});

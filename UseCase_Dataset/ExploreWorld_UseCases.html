@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ExploreWorld – Full Use Case Diagram</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',Arial,sans-serif;background:#f8fafc;color:#1e293b;font-size:11pt;line-height:1.6}
+
+  /* ── COVER ── */
+  .cover{
+    background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 45%,#0f172a 100%);
+    color:#fff;min-height:220px;display:flex;align-items:center;
+    justify-content:space-between;padding:40px 60px;
+  }
+  .cover-left h1{font-size:28pt;font-weight:800;letter-spacing:-1px;line-height:1.1}
+  .cover-left h1 span{color:#38bdf8}
+  .cover-left p{margin-top:10px;color:#94a3b8;font-size:11pt}
+  .cover-right{text-align:right}
+  .cover-right .badge{
+    background:rgba(56,189,248,.15);border:1px solid rgba(56,189,248,.4);
+    border-radius:8px;padding:10px 20px;display:inline-block;
+    font-size:9pt;color:#7dd3fc;letter-spacing:.5px;margin-bottom:8px
+  }
+  .cover-right p{font-size:9pt;color:#64748b}
+
+  /* ── SECTION ── */
+  .section{max-width:1160px;margin:0 auto;padding:30px 40px}
+  .section-title{
+    font-size:14pt;font-weight:700;color:#0f172a;
+    padding-bottom:8px;border-bottom:3px solid #38bdf8;
+    margin-bottom:20px;display:flex;align-items:center;gap:10px
+  }
+  .section-title .num{
+    background:#38bdf8;color:#fff;border-radius:6px;
+    padding:2px 10px;font-size:10pt;font-weight:700
+  }
+
+  /* ── ACTOR CARDS ── */
+  .actor-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:10px}
+  .actor-card{
+    border:1.5px solid #e2e8f0;border-radius:10px;padding:14px 16px;
+    background:#fff;display:flex;align-items:flex-start;gap:12px
+  }
+  .actor-card .icon{font-size:22px;flex-shrink:0;margin-top:2px}
+  .actor-card .name{font-weight:700;font-size:10pt;color:#0f172a}
+  .actor-card .desc{font-size:9pt;color:#64748b;margin-top:3px}
+
+  /* ── DIAGRAM CONTAINER ── */
+  .diagram-wrap{
+    background:#fff;border:2px solid #e2e8f0;border-radius:14px;
+    padding:20px;overflow-x:auto;
+  }
+  svg.ucdiag{width:100%;min-width:1060px;height:auto;display:block}
+
+  /* ── LEGEND ── */
+  .legend{
+    display:flex;flex-wrap:wrap;gap:18px;margin:18px 0;
+    padding:14px 20px;background:#fff;border:1.5px solid #e2e8f0;
+    border-radius:10px;align-items:center
+  }
+  .legend-item{display:flex;align-items:center;gap:8px;font-size:9.5pt;color:#374151}
+  .legend-line{width:36px;height:0;border-top:2px solid #374151}
+  .legend-dashed{width:36px;height:0;border-top:2.5px dashed #1d4ed8}
+  .legend-gen{width:36px;height:0;border-top:2px solid #6d28d9}
+  .lsq{width:14px;height:14px;border-radius:3px;flex-shrink:0}
+
+  /* ── USE CASE TABLE ── */
+  .uc-table{width:100%;border-collapse:collapse;font-size:9.5pt}
+  .uc-table th{
+    background:#0f172a;color:#fff;padding:10px 12px;text-align:left;
+    font-weight:600;white-space:nowrap
+  }
+  .uc-table td{padding:9px 12px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+  .uc-table tr:hover td{background:#f8fafc}
+  .uc-id{font-weight:700;color:#1d4ed8;white-space:nowrap}
+  .pill{
+    display:inline-block;padding:2px 9px;border-radius:50px;
+    font-size:8pt;font-weight:600;white-space:nowrap
+  }
+  .pill-guest{background:#dbeafe;color:#1e40af}
+  .pill-traveller{background:#dcfce7;color:#15803d}
+  .pill-admin{background:#fef3c7;color:#92400e}
+  .pill-high{background:#fee2e2;color:#991b1b}
+  .pill-med{background:#fef3c7;color:#92400e}
+  .pill-low{background:#dcfce7;color:#166534}
+
+  /* ── FLOW TABLE ── */
+  .flow-table{width:100%;border-collapse:collapse;font-size:9.5pt}
+  .flow-table th{background:#1e3a5f;color:#fff;padding:9px 12px;text-align:left}
+  .flow-table td{padding:9px 12px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+  .flow-table tr:nth-child(even) td{background:#f8fafc}
+  .flow-table ol{padding-left:16px;margin:0}
+  .flow-table li{margin-bottom:3px}
+
+  /* ── FOOTER ── */
+  .footer{
+    text-align:center;padding:20px;font-size:9pt;color:#94a3b8;
+    border-top:1px solid #e2e8f0;margin-top:10px
+  }
+
+  @media print{
+    body{background:#fff}
+    .cover{min-height:180px;padding:30px 40px}
+    .section{padding:20px 30px}
+    .diagram-wrap{padding:10px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ COVER ══════════════════ -->
+<div class="cover">
+  <div class="cover-left">
+    <h1>🌍 Explore<span>World</span></h1>
+    <p>Full Use Case Diagram &amp; Specification</p>
+    <p style="margin-top:6px;font-size:9pt;color:#475569">Community-Driven Hidden Travel Destination Platform</p>
+  </div>
+  <div class="cover-right">
+    <div class="badge">USE CASE DOCUMENT — v1.0</div>
+    <p>Stack: React.js · Node.js · Express.js · MongoDB</p>
+    <p style="margin-top:4px">Date: April 2026</p>
+  </div>
+</div>
+
+<!-- ══════════════════ 1. ACTORS ══════════════════ -->
+<div class="section">
+  <div class="section-title"><span class="num">1</span>System Actors</div>
+  <div class="actor-grid">
+    <div class="actor-card">
+      <div class="icon">👤</div>
+      <div><div class="name">Guest User</div><div class="desc">Unauthenticated visitor. Can browse, search, and view destination details without an account.</div></div>
+    </div>
+    <div class="actor-card">
+      <div class="icon">🧭</div>
+      <div><div class="name">Registered Traveller</div><div class="desc">Authenticated user. Inherits all Guest capabilities plus can post, rate, review, save, and report content.</div></div>
+    </div>
+    <div class="actor-card">
+      <div class="icon">🛡️</div>
+      <div><div class="name">Administrator</div><div class="desc">Platform manager. Moderates content, manages user accounts, and monitors analytics.</div></div>
+    </div>
+    <div class="actor-card">
+      <div class="icon">🖼️</div>
+      <div><div class="name">Cloudinary (External)</div><div class="desc">Cloud image storage service used during travel post submission for photo uploads.</div></div>
+    </div>
+    <div class="actor-card">
+      <div class="icon">🔑</div>
+      <div><div class="name">JWT Auth Service</div><div class="desc">Issues and validates JSON Web Tokens for all authenticated sessions.</div></div>
+    </div>
+    <div class="actor-card">
+      <div class="icon">🗄️</div>
+      <div><div class="name">MongoDB Database</div><div class="desc">Stores all user profiles, travel posts, ratings, reviews, and moderation records.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ 2. DIAGRAM ══════════════════ -->
+<div class="section" style="padding-top:0">
+  <div class="section-title"><span class="num">2</span>Full Use Case Diagram</div>
+  <div class="diagram-wrap">
+
+<svg class="ucdiag" viewBox="0 0 1120 900" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <!-- Filled arrowhead — include / extend -->
+  <marker id="arr" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <polygon points="0 0,9 3.5,0 7" fill="#1d4ed8"/>
+  </marker>
+  <!-- Open arrowhead — generalization (inheritance) -->
+  <marker id="gen" markerWidth="11" markerHeight="9" refX="1" refY="4.5" orient="auto">
+    <polygon points="11 0,0 4.5,11 9" fill="#fff" stroke="#7c3aed" stroke-width="1.5"/>
+  </marker>
+  <!-- Shadow filter -->
+  <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+    <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#00000022"/>
+  </filter>
+</defs>
+
+<!-- ── BACKGROUND ── -->
+<rect width="1120" height="900" fill="#f8fafc"/>
+
+<!-- ══ ZONE BACKGROUNDS (drawn first) ══ -->
+
+<!-- Auth zone -->
+<rect x="162" y="14" width="795" height="118" rx="8" fill="#dbeafe" fill-opacity=".45"/>
+<text x="948" y="34" text-anchor="end" font-size="9" font-weight="700" fill="#1e40af" letter-spacing="1" font-family="monospace">« AUTHENTICATION »</text>
+
+<!-- Public zone -->
+<rect x="162" y="140" width="795" height="118" rx="8" fill="#dcfce7" fill-opacity=".5"/>
+<text x="948" y="160" text-anchor="end" font-size="9" font-weight="700" fill="#15803d" letter-spacing="1" font-family="monospace">« PUBLIC ACCESS »</text>
+
+<!-- Registered Traveller zone -->
+<rect x="162" y="266" width="795" height="270" rx="8" fill="#bbf7d0" fill-opacity=".35"/>
+<text x="948" y="286" text-anchor="end" font-size="9" font-weight="700" fill="#166534" letter-spacing="1" font-family="monospace">« REGISTERED TRAVELLER »</text>
+
+<!-- Admin zone -->
+<rect x="162" y="544" width="795" height="320" rx="8" fill="#fef3c7" fill-opacity=".6"/>
+<text x="948" y="564" text-anchor="end" font-size="9" font-weight="700" fill="#92400e" letter-spacing="1" font-family="monospace">« ADMINISTRATION »</text>
+
+<!-- ══ SYSTEM BOUNDARY ══ -->
+<rect x="157" y="10" width="805" height="858" rx="10" fill="none" stroke="#334155" stroke-width="2.5"/>
+<text x="559" y="882" text-anchor="middle" font-size="11" font-weight="700" fill="#334155">« ExploreWorld System Boundary »</text>
+
+<!-- ══════════════════════════════════════════════════════════
+     ASSOCIATION LINES — drawn BEFORE ellipses so fills cap them
+     ══════════════════════════════════════════════════════════ -->
+
+<!-- ─ GUEST USER associations (Guest body center ≈ 68, 198) ─ -->
+<!-- Guest → UC-01 Register -->
+<line x1="68" y1="198" x2="368" y2="83" stroke="#475569" stroke-width="1.5"/>
+<!-- Guest → UC-02 Login -->
+<line x1="68" y1="198" x2="718" y2="83" stroke="#475569" stroke-width="1.5"/>
+<!-- Guest → UC-03 Browse -->
+<line x1="68" y1="210" x2="282" y2="210" stroke="#475569" stroke-width="1.5"/>
+<!-- Guest → UC-04 Search -->
+<line x1="68" y1="210" x2="544" y2="210" stroke="#475569" stroke-width="1.5"/>
+<!-- Guest → UC-05 View Detail -->
+<line x1="68" y1="210" x2="830" y2="210" stroke="#475569" stroke-width="1.5"/>
+
+<!-- ─ REGISTERED TRAVELLER associations (Traveller body center ≈ 68, 512) ─ -->
+<!-- Traveller → UC-06 Submit Post -->
+<line x1="68" y1="512" x2="268" y2="372" stroke="#475569" stroke-width="1.5"/>
+<!-- Traveller → UC-07 Rate & Review -->
+<line x1="68" y1="512" x2="524" y2="372" stroke="#475569" stroke-width="1.5"/>
+<!-- Traveller → UC-08 Manage Profile -->
+<line x1="68" y1="512" x2="786" y2="372" stroke="#475569" stroke-width="1.5"/>
+<!-- Traveller → UC-09 Save Wishlist -->
+<line x1="68" y1="512" x2="268" y2="488" stroke="#475569" stroke-width="1.5"/>
+<!-- Traveller → UC-10 Report Content -->
+<line x1="68" y1="512" x2="524" y2="488" stroke="#475569" stroke-width="1.5"/>
+
+<!-- ─ GENERALIZATION: Registered Traveller ──▷ Guest (open triangle) ─ -->
+<!-- Vertical line from Traveller (top of head) up to Guest (bottom of legs) -->
+<line x1="68" y1="450" x2="68" y2="240" stroke="#7c3aed" stroke-width="2" stroke-dasharray="0" marker-end="url(#gen)"/>
+
+<!-- ─ ADMINISTRATOR associations (Admin body center ≈ 1058, 400) ─ -->
+<!-- Admin → UC-02 Login -->
+<line x1="1058" y1="400" x2="718" y2="83" stroke="#b45309" stroke-width="1.5"/>
+<!-- Admin → UC-11 Moderate -->
+<line x1="1058" y1="400" x2="318" y2="664" stroke="#b45309" stroke-width="1.5"/>
+<!-- Admin → UC-12 Manage Users -->
+<line x1="1058" y1="400" x2="566" y2="664" stroke="#b45309" stroke-width="1.5"/>
+<!-- Admin → UC-13 Analytics -->
+<line x1="1058" y1="400" x2="824" y2="664" stroke="#b45309" stroke-width="1.5"/>
+
+<!-- ══════════════════════════════════════════════════
+     INCLUDE / EXTEND DASHED ARROWS
+     ══════════════════════════════════════════════════ -->
+
+<!-- UC-06 Submit Post ──«include»──► UC-14 Upload Image -->
+<!-- From right of UC-06 (268+97=365,372) to left of UC-14 (786-85=701,475) -->
+<line x1="365" y1="372" x2="701" y2="471"
+  stroke="#1d4ed8" stroke-width="1.8" stroke-dasharray="7,4" marker-end="url(#arr)"/>
+<rect x="468" y="392" width="66" height="18" rx="4" fill="#eff6ff"/>
+<text x="501" y="405" text-anchor="middle" font-size="8.5" font-style="italic" fill="#1d4ed8">«include»</text>
+
+<!-- UC-10 Report Content ──«include»──► UC-11 Moderate Content -->
+<!-- From bottom-left of UC-10 (480,507) to top-right of UC-11 (354,642) -->
+<line x1="480" y1="506" x2="354" y2="642"
+  stroke="#1d4ed8" stroke-width="1.8" stroke-dasharray="7,4" marker-end="url(#arr)"/>
+<rect x="385" y="558" width="66" height="18" rx="4" fill="#eff6ff"/>
+<text x="418" y="571" text-anchor="middle" font-size="8.5" font-style="italic" fill="#1d4ed8">«include»</text>
+
+<!-- UC-04 Search & Filter ──«extend»──► UC-03 Browse -->
+<!-- Horizontal: from left edge of UC-04 (544-85=459,203) to right of UC-03 (282+95=377,203) -->
+<line x1="459" y1="203" x2="377" y2="203"
+  stroke="#1d4ed8" stroke-width="1.8" stroke-dasharray="7,4" marker-end="url(#arr)"/>
+<rect x="393" y="193" width="52" height="16" rx="4" fill="#eff6ff"/>
+<text x="419" y="204" text-anchor="middle" font-size="8" font-style="italic" fill="#1d4ed8">«extend»</text>
+
+<!-- UC-07 Rate & Review ──«extend»──► UC-05 View Detail -->
+<!-- From right of UC-07 (616,365) to bottom of UC-05 (830, 232) -->
+<line x1="612" y1="356" x2="780" y2="233"
+  stroke="#1d4ed8" stroke-width="1.8" stroke-dasharray="7,4" marker-end="url(#arr)"/>
+<rect x="672" y="277" width="52" height="16" rx="4" fill="#eff6ff"/>
+<text x="698" y="288" text-anchor="middle" font-size="8" font-style="italic" fill="#1d4ed8">«extend»</text>
+
+<!-- UC-01 Register ──«extend»──► UC-02 Login  (after registering, extends to login) -->
+<!-- From right of UC-01 (453,83) to left of UC-02 (632,83) -->
+<line x1="453" y1="83" x2="632" y2="83"
+  stroke="#1d4ed8" stroke-width="1.8" stroke-dasharray="7,4" marker-end="url(#arr)"/>
+<rect x="515" y="71" width="52" height="16" rx="4" fill="#eff6ff"/>
+<text x="541" y="82" text-anchor="middle" font-size="8" font-style="italic" fill="#1d4ed8">«extend»</text>
+
+<!-- ══════════════════════════════════════════════
+     USE CASE ELLIPSES — drawn ON TOP of lines
+     ══════════════════════════════════════════════ -->
+
+<!-- ─ AUTH ZONE — blue ellipses ─ -->
+<g filter="url(#shadow)">
+  <ellipse cx="368" cy="83" rx="85" ry="24" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+  <text x="368" y="80" text-anchor="middle" font-size="10" font-weight="600" fill="#1e40af">UC-01</text>
+  <text x="368" y="93" text-anchor="middle" font-size="9" fill="#1e40af">Register</text>
+</g>
+<g filter="url(#shadow)">
+  <ellipse cx="718" cy="83" rx="86" ry="24" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+  <text x="718" y="80" text-anchor="middle" font-size="10" font-weight="600" fill="#1e40af">UC-02</text>
+  <text x="718" y="93" text-anchor="middle" font-size="9" fill="#1e40af">Login / Logout</text>
+</g>
+
+<!-- ─ PUBLIC ZONE — green ellipses ─ -->
+<g filter="url(#shadow)">
+  <ellipse cx="282" cy="210" rx="96" ry="26" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="282" y="207" text-anchor="middle" font-size="10" font-weight="600" fill="#15803d">UC-03</text>
+  <text x="282" y="220" text-anchor="middle" font-size="9" fill="#15803d">Browse Destinations</text>
+</g>
+<g filter="url(#shadow)">
+  <ellipse cx="544" cy="210" rx="86" ry="26" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="544" y="207" text-anchor="middle" font-size="10" font-weight="600" fill="#15803d">UC-04</text>
+  <text x="544" y="220" text-anchor="middle" font-size="9" fill="#15803d">Search &amp; Filter</text>
+</g>
+<g filter="url(#shadow)">
+  <ellipse cx="830" cy="210" rx="109" ry="26" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="830" y="207" text-anchor="middle" font-size="10" font-weight="600" fill="#15803d">UC-05</text>
+  <text x="830" y="220" text-anchor="middle" font-size="9" fill="#15803d">View Destination Detail</text>
+</g>
+
+<!-- ─ TRAVELLER ZONE — deeper green ellipses ─ -->
+<g filter="url(#shadow)">
+  <ellipse cx="268" cy="372" rx="97" ry="26" fill="#bbf7d0" stroke="#15803d" stroke-width="2"/>
+  <text x="268" y="369" text-anchor="middle" font-size="10" font-weight="600" fill="#14532d">UC-06</text>
+  <text x="268" y="382" text-anchor="middle" font-size="9" fill="#14532d">Submit Travel Post</text>
+</g>
+<g filter="url(#shadow)">
+  <ellipse cx="524" cy="372" rx="92" ry="26" fill="#bbf7d0" stroke="#15803d" stroke-width="2"/>
+  <text x="524" y="369" text-anchor="middle" font-size="10" font-weight="600" fill="#14532d">UC-07</text>
+  <text x="524" y="382" text-anchor="middle" font-size="9" fill="#14532d">Rate &amp; Review</text>
+</g>
+<g filter="url(#shadow)">
+  <ellipse cx="786" cy="372" rx="98" ry="26" fill="#bbf7d0" stroke="#15803d" stroke-width="2"/>
+  <text x="786" y="369" text-anchor="middle" font-size="10" font-weight="600" fill="#14532d">UC-08</text>
+  <text x="786" y="382" text-anchor="middle" font-size="9" fill="#14532d">Manage Profile</text>
+</g>
+<g filter="url(#shadow)">
+  <ellipse cx="268" cy="488" rx="97" ry="26" fill="#bbf7d0" stroke="#15803d" stroke-width="2"/>
+  <text x="268" y="485" text-anchor="middle" font-size="10" font-weight="600" fill="#14532d">UC-09</text>
+  <text x="268" y="498" text-anchor="middle" font-size="9" fill="#14532d">Save to Wishlist</text>
+</g>
+<g filter="url(#shadow)">
+  <ellipse cx="524" cy="488" rx="97" ry="26" fill="#bbf7d0" stroke="#15803d" stroke-width="2"/>
+  <text x="524" y="485" text-anchor="middle" font-size="10" font-weight="600" fill="#14532d">UC-10</text>
+  <text x="524" y="498" text-anchor="middle" font-size="9" fill="#14532d">Report Content</text>
+</g>
+<!-- UC-14 Upload Image — external/included, grey -->
+<g filter="url(#shadow)">
+  <ellipse cx="786" cy="479" rx="85" ry="26" fill="#f1f5f9" stroke="#64748b" stroke-width="2" stroke-dasharray="5,3"/>
+  <text x="786" y="472" text-anchor="middle" font-size="9" font-style="italic" fill="#475569">«external»</text>
+  <text x="786" y="484" text-anchor="middle" font-size="10" font-weight="600" fill="#374151">UC-14</text>
+  <text x="786" y="497" text-anchor="middle" font-size="9" fill="#374151">Upload Image</text>
+</g>
+
+<!-- ─ ADMIN ZONE — amber ellipses ─ -->
+<g filter="url(#shadow)">
+  <ellipse cx="318" cy="664" rx="105" ry="26" fill="#fef3c7" stroke="#b45309" stroke-width="2"/>
+  <text x="318" y="661" text-anchor="middle" font-size="10" font-weight="600" fill="#78350f">UC-11</text>
+  <text x="318" y="674" text-anchor="middle" font-size="9" fill="#78350f">Moderate Content</text>
+</g>
+<g filter="url(#shadow)">
+  <ellipse cx="566" cy="664" rx="105" ry="26" fill="#fef3c7" stroke="#b45309" stroke-width="2"/>
+  <text x="566" y="661" text-anchor="middle" font-size="10" font-weight="600" fill="#78350f">UC-12</text>
+  <text x="566" y="674" text-anchor="middle" font-size="9" fill="#78350f">Manage User Accounts</text>
+</g>
+<g filter="url(#shadow)">
+  <ellipse cx="824" cy="664" rx="100" ry="26" fill="#fef3c7" stroke="#b45309" stroke-width="2"/>
+  <text x="824" y="661" text-anchor="middle" font-size="10" font-weight="600" fill="#78350f">UC-13</text>
+  <text x="824" y="674" text-anchor="middle" font-size="9" fill="#78350f">View Analytics</text>
+</g>
+
+<!-- ── CLOUDINARY external system (bottom of admin zone) ── -->
+<rect x="210" y="740" width="130" height="36" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3"/>
+<text x="275" y="754" text-anchor="middle" font-size="9" font-style="italic" fill="#64748b">«external system»</text>
+<text x="275" y="768" text-anchor="middle" font-size="10" font-weight="600" fill="#374151">🖼 Cloudinary</text>
+<line x1="786" y1="505" x2="340" y2="740" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3"/>
+
+<!-- JWT Auth service -->
+<rect x="580" y="740" width="130" height="36" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3"/>
+<text x="645" y="754" text-anchor="middle" font-size="9" font-style="italic" fill="#64748b">«external system»</text>
+<text x="645" y="768" text-anchor="middle" font-size="10" font-weight="600" fill="#374151">🔑 JWT Auth</text>
+<line x1="718" y1="107" x2="645" y2="740" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3"/>
+
+<!-- ══ ACTOR: GUEST USER (left, top) ══ -->
+<g>
+  <!-- Head -->
+  <circle cx="68" cy="150" r="16" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+  <!-- Body -->
+  <line x1="68" y1="166" x2="68" y2="200" stroke="#1d4ed8" stroke-width="2"/>
+  <!-- Arms -->
+  <line x1="68" y1="180" x2="46" y2="170" stroke="#1d4ed8" stroke-width="2"/>
+  <line x1="68" y1="180" x2="90" y2="170" stroke="#1d4ed8" stroke-width="2"/>
+  <!-- Legs -->
+  <line x1="68" y1="200" x2="52" y2="222" stroke="#1d4ed8" stroke-width="2"/>
+  <line x1="68" y1="200" x2="84" y2="222" stroke="#1d4ed8" stroke-width="2"/>
+  <!-- Label -->
+  <text x="68" y="240" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1e40af">Guest</text>
+  <text x="68" y="254" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1e40af">User</text>
+</g>
+
+<!-- ══ ACTOR: REGISTERED TRAVELLER (left, middle-low) ══ -->
+<g>
+  <!-- Head -->
+  <circle cx="68" cy="454" r="16" fill="#bbf7d0" stroke="#15803d" stroke-width="2"/>
+  <!-- Body -->
+  <line x1="68" y1="470" x2="68" y2="504" stroke="#15803d" stroke-width="2"/>
+  <!-- Arms -->
+  <line x1="68" y1="484" x2="46" y2="474" stroke="#15803d" stroke-width="2"/>
+  <line x1="68" y1="484" x2="90" y2="474" stroke="#15803d" stroke-width="2"/>
+  <!-- Legs -->
+  <line x1="68" y1="504" x2="52" y2="526" stroke="#15803d" stroke-width="2"/>
+  <line x1="68" y1="504" x2="84" y2="526" stroke="#15803d" stroke-width="2"/>
+  <!-- Label -->
+  <text x="68" y="544" text-anchor="middle" font-size="10.5" font-weight="700" fill="#15803d">Registered</text>
+  <text x="68" y="558" text-anchor="middle" font-size="10.5" font-weight="700" fill="#15803d">Traveller</text>
+</g>
+
+<!-- ══ ACTOR: ADMINISTRATOR (right side) ══ -->
+<g>
+  <!-- Head -->
+  <circle cx="1058" cy="354" r="16" fill="#fef3c7" stroke="#b45309" stroke-width="2"/>
+  <!-- Body -->
+  <line x1="1058" y1="370" x2="1058" y2="404" stroke="#b45309" stroke-width="2"/>
+  <!-- Arms -->
+  <line x1="1058" y1="384" x2="1036" y2="374" stroke="#b45309" stroke-width="2"/>
+  <line x1="1058" y1="384" x2="1080" y2="374" stroke="#b45309" stroke-width="2"/>
+  <!-- Legs -->
+  <line x1="1058" y1="404" x2="1042" y2="426" stroke="#b45309" stroke-width="2"/>
+  <line x1="1058" y1="404" x2="1074" y2="426" stroke="#b45309" stroke-width="2"/>
+  <!-- Label -->
+  <text x="1058" y="444" text-anchor="middle" font-size="10.5" font-weight="700" fill="#92400e">Admin-</text>
+  <text x="1058" y="458" text-anchor="middle" font-size="10.5" font-weight="700" fill="#92400e">istrator</text>
+</g>
+
+<!-- ── Generalization label ── -->
+<rect x="74" y="325" width="68" height="18" rx="4" fill="#ede9fe"/>
+<text x="108" y="338" text-anchor="middle" font-size="8.5" font-style="italic" fill="#7c3aed">«extends»</text>
+
+</svg>
+
+  </div><!-- end diagram-wrap -->
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <strong style="font-size:9.5pt;color:#374151">Legend:</strong>
+    <!-- Zones -->
+    <div class="legend-item"><div class="lsq" style="background:#dbeafe;border:2px solid #1d4ed8"></div>Auth Zone</div>
+    <div class="legend-item"><div class="lsq" style="background:#dcfce7;border:2px solid #16a34a"></div>Public Zone</div>
+    <div class="legend-item"><div class="lsq" style="background:#bbf7d0;border:2px solid #15803d"></div>Traveller Zone</div>
+    <div class="legend-item"><div class="lsq" style="background:#fef3c7;border:2px solid #b45309"></div>Admin Zone</div>
+    <div class="legend-item"><div class="lsq" style="background:#f1f5f9;border:2px dashed #64748b"></div>External</div>
+    <!-- Lines -->
+    <div style="width:1px;height:24px;background:#e2e8f0;margin:0 4px"></div>
+    <div class="legend-item"><div class="legend-line"></div>Association</div>
+    <div class="legend-item"><svg width="40" height="14"><line x1="0" y1="7" x2="32" y2="7" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="5,3"/><polygon points="30,3 40,7 30,11" fill="#1d4ed8"/></svg>«include» / «extend»</div>
+    <div class="legend-item"><svg width="40" height="14"><line x1="0" y1="7" x2="30" y2="7" stroke="#7c3aed" stroke-width="2"/><polygon points="12,3 2,7 12,11" fill="#fff" stroke="#7c3aed" stroke-width="1.5"/></svg>Generalization</div>
+    <div style="width:1px;height:24px;background:#e2e8f0;margin:0 4px"></div>
+    <div class="legend-item"><svg width="32" height="14"><circle cx="10" cy="7" r="6" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.5"/><line x1="10" y1="13" x2="10" y2="18"/><line x1="4" y1="15" x2="16" y2="15"/><line x1="10" y1="18" x2="5" y2="24"/><line x1="10" y1="18" x2="15" y2="24"/></svg>Actor (stick figure)</div>
+    <div class="legend-item"><svg width="80" height="20"><ellipse cx="40" cy="10" rx="38" ry="10" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/><text x="40" y="14" text-anchor="middle" font-size="9" fill="#15803d" font-family="Arial">Use Case</text></svg></div>
+  </div>
+</div>
+
+<!-- ══════════════════ 3. USE CASE REFERENCE TABLE ══════════════════ -->
+<div class="section" style="padding-top:0">
+  <div class="section-title"><span class="num">3</span>Use Case Reference Table</div>
+  <table class="uc-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Use Case Name</th>
+        <th>Actor(s)</th>
+        <th>Zone</th>
+        <th>Precondition</th>
+        <th>Postcondition</th>
+        <th>Priority</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="uc-id">UC-01</td>
+        <td><strong>Register</strong></td>
+        <td><span class="pill pill-guest">Guest</span></td>
+        <td>Auth</td>
+        <td>Valid email, not already registered</td>
+        <td>Account created; verification email sent</td>
+        <td><span class="pill pill-high">High</span></td>
+      </tr>
+      <tr>
+        <td class="uc-id">UC-02</td>
+        <td><strong>Login / Logout</strong></td>
+        <td><span class="pill pill-guest">Guest</span> <span class="pill pill-traveller">Traveller</span> <span class="pill pill-admin">Admin</span></td>
+        <td>Auth</td>
+        <td>Registered &amp; verified account</td>
+        <td>JWT issued; user authenticated OR session terminated</td>
+        <td><span class="pill pill-high">High</span></td>
+      </tr>
+      <tr>
+        <td class="uc-id">UC-03</td>
+        <td><strong>Browse Destinations</strong></td>
+        <td><span class="pill pill-guest">Guest</span> <span class="pill pill-traveller">Traveller</span></td>
+        <td>Public</td>
+        <td>At least one approved destination exists</td>
+        <td>Paginated list of destination cards displayed</td>
+        <td><span class="pill pill-high">High</span></td>
+      </tr>
+      <tr>
+        <td class="uc-id">UC-04</td>
+        <td><strong>Search &amp; Filter</strong></td>
+        <td><span class="pill pill-guest">Guest</span> <span class="pill pill-traveller">Traveller</span></td>
+        <td>Public</td>
+        <td>User on browse/search page</td>
+        <td>Filtered results matching keyword/region/activity/difficulty shown</td>
+        <td><span class="pill pill-high">High</span></td>
+      </tr>
+      <tr>
+        <td class="uc-id">UC-05</td>
+        <td><strong>View Destination Detail</strong></td>
+        <td><span class="pill pill-guest">Guest</span> <span class="pill pill-traveller">Traveller</span></td>
+        <td>Public</td>
+        <td>Destination post is approved &amp; public</td>
+        <td>Full detail page shown: photos, story, map, avg rating, reviews</td>
+        <td><span class="pill pill-high">High</span></td>
+      </tr>
+      <tr>
+        <td class="uc-id">UC-06</td>
+        <td><strong>Submit Travel Post</strong></td>
+        <td><span class="pill pill-traveller">Traveller</span></td>
+        <td>Traveller</td>
+        <td>User authenticated (JWT valid)</td>
+        <td>Post saved with Pending status; admin notified</td>
+        <td><span class="pill pill-high">High</span></td>
+      </tr>
+      <tr>
+        <td class="uc-id">UC-07</td>
+        <td><strong>Rate &amp; Review</strong></td>
+        <td><span class="pill pill-traveller">Traveller</span></td>
+        <td>Traveller</td>
+        <td>Authenticated; destination published; not yet reviewed by this user</td>
+        <td>Review saved; avg rating recalculated; review visible to all</td>
+        <td><span class="pill pill-high">High</span></td>
+      </tr>
+      <tr>
+        <td class="uc-id">UC-08</td>
+        <td><strong>Manage Profile</strong></td>
+        <td><span class="pill pill-traveller">Traveller</span></td>
+        <td>Traveller</td>
+        <td>User authenticated</td>
+        <td>Profile info updated and reflected across platform</td>
+        <td><span class="pill pill-med">Medium</span></td>
+      </tr>
+      <tr>
+        <td class="uc-id">UC-09</td>
+        <td><strong>Save to Wishlist</strong></td>
+        <td><span class="pill pill-traveller">Traveller</span></td>
+        <td>Traveller</td>
+        <td>User authenticated; destination published</td>
+        <td>Destination added/removed from user wishlist (toggle)</td>
+        <td><span class="pill pill-med">Medium</span></td>
+      </tr>
+      <tr>
+        <td class="uc-id">UC-10</td>
+        <td><strong>Report Content</strong></td>
+        <td><span class="pill pill-traveller">Traveller</span></td>
+        <td>Traveller</td>
+        <td>User authenticated; content published</td>
+        <td>Report logged; admin notified; auto-hide after 5 reports</td>
+        <td><span class="pill pill-med">Medium</span></td>
+      </tr>
+      <tr>
+        <td class="uc-id">UC-11</td>
+        <td><strong>Moderate Content</strong></td>
+        <td><span class="pill pill-admin">Admin</span></td>
+        <td>Admin</td>
+        <td>Admin authenticated; pending/flagged content exists</td>
+        <td>Post approved (visible) or rejected/deleted; author notified</td>
+        <td><span class="pill pill-high">High</span></td>
+      </tr>
+      <tr>
+        <td class="uc-id">UC-12</td>
+        <td><strong>Manage User Accounts</strong></td>
+        <td><span class="pill pill-admin">Admin</span></td>
+        <td>Admin</td>
+        <td>Admin authenticated with admin privileges</td>
+        <td>User account suspended/banned; tokens revoked; user notified</td>
+        <td><span class="pill pill-med">Medium</span></td>
+      </tr>
+      <tr>
+        <td class="uc-id">UC-13</td>
+        <td><strong>View Analytics</strong></td>
+        <td><span class="pill pill-admin">Admin</span></td>
+        <td>Admin</td>
+        <td>Admin authenticated</td>
+        <td>Aggregated metrics displayed; optional CSV export</td>
+        <td><span class="pill pill-low">Low</span></td>
+      </tr>
+      <tr>
+        <td class="uc-id">UC-14</td>
+        <td><strong>Upload Image</strong> <em style="font-size:8.5pt;color:#64748b">(«include» sub-UC)</em></td>
+        <td><span class="pill pill-traveller">Traveller</span></td>
+        <td>External</td>
+        <td>Included by UC-06; Cloudinary service reachable</td>
+        <td>Image uploaded to Cloudinary; URL returned to post form</td>
+        <td><span class="pill pill-high">High</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════ 4. MAIN FLOW DESCRIPTIONS ══════════════════ -->
+<div class="section" style="padding-top:0">
+  <div class="section-title"><span class="num">4</span>Main Application Flows</div>
+  <table class="flow-table">
+    <thead>
+      <tr>
+        <th style="width:160px">Flow</th>
+        <th>Step-by-Step Description</th>
+        <th style="width:160px">Actors Involved</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>🔐 User Registration &amp; Login</strong></td>
+        <td><ol>
+          <li>Guest opens Register page → fills name, email, password → clicks Create Account.</li>
+          <li>System validates uniqueness → hashes password (bcrypt) → saves user in MongoDB → sends verification email.</li>
+          <li>User verifies email → navigates to Login → enters credentials → System issues JWT (24h) in HTTP-only cookie.</li>
+          <li>User is redirected to the home dashboard as Registered Traveller.</li>
+        </ol></td>
+        <td>Guest → Registered Traveller · JWT Auth Service</td>
+      </tr>
+      <tr>
+        <td><strong>🔍 Discover &amp; View Destinations</strong></td>
+        <td><ol>
+          <li>Guest or Traveller opens the home page → browses paginated destination cards.</li>
+          <li>Uses Search bar (keyword) or Filters (Region, Activity, Difficulty, Rating) → System queries MongoDB → results updated in real-time.</li>
+          <li>User clicks a destination card → System fetches full post: photos, story, map pin, avg rating, reviews → detail page renders.</li>
+          <li>Authenticated Traveller sees additional options: Rate, Review, Save.</li>
+        </ol></td>
+        <td>Guest / Registered Traveller · MongoDB</td>
+      </tr>
+      <tr>
+        <td><strong>📝 Submit a Hidden Destination</strong></td>
+        <td><ol>
+          <li>Authenticated Traveller clicks "Share a Destination" → form opens.</li>
+          <li>Fills in: name, region, country, activity type, difficulty, story (min 100 chars), best season, tips.</li>
+          <li>Uploads at least one photo → System calls Cloudinary API → URL stored.</li>
+          <li>Clicks Submit → System validates → saves post with status Pending → Admin notified.</li>
+          <li>Post appears publicly after Admin approval.</li>
+        </ol></td>
+        <td>Registered Traveller · Cloudinary · Admin</td>
+      </tr>
+      <tr>
+        <td><strong>⭐ Rate &amp; Review</strong></td>
+        <td><ol>
+          <li>Authenticated Traveller on a destination detail page clicks "Write a Review".</li>
+          <li>Selects 1–5 star rating + writes review text (min 20 chars) → Submit.</li>
+          <li>System validates → saves review to MongoDB → recalculates destination's average rating.</li>
+          <li>New review is immediately visible to all users on the destination page.</li>
+        </ol></td>
+        <td>Registered Traveller · MongoDB</td>
+      </tr>
+      <tr>
+        <td><strong>🛡️ Content Moderation</strong></td>
+        <td><ol>
+          <li>Admin logs in → navigates to Admin Dashboard → Content Moderation queue.</li>
+          <li>Reviews pending posts and flagged/reported content (with report counts &amp; reasons).</li>
+          <li>For each item: Approve (post goes live), Reject (post removed, reason given), or Delete.</li>
+          <li>Author is notified by email of the decision.</li>
+          <li>Auto-hide threshold: content with ≥ 5 user reports is hidden pending Admin review.</li>
+        </ol></td>
+        <td>Administrator · Registered Traveller (reporter)</td>
+      </tr>
+      <tr>
+        <td><strong>📊 Analytics &amp; User Management</strong></td>
+        <td><ol>
+          <li>Admin accesses Analytics dashboard → views: total users, new registrations, total approved/pending posts, top-rated destinations, most-searched regions.</li>
+          <li>Can filter by date range and export data as CSV.</li>
+          <li>In User Management: searches for a user → views their posts, reviews, and reports → can Suspend (temp) or Ban (permanent).</li>
+          <li>Banned user's JWT tokens are immediately revoked and they cannot log in.</li>
+        </ol></td>
+        <td>Administrator · MongoDB</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════ 5. INCLUDE / EXTEND REFERENCE ══════════════════ -->
+<div class="section" style="padding-top:0">
+  <div class="section-title"><span class="num">5</span>Include / Extend &amp; Generalization Reference</div>
+  <table class="uc-table">
+    <thead>
+      <tr><th>From Use Case</th><th>Relationship</th><th>To Use Case</th><th>Explanation</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="uc-id">UC-06</span> Submit Travel Post</td>
+        <td><svg width="80" height="16" style="vertical-align:middle"><line x1="0" y1="8" x2="62" y2="8" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="5,3"/><polygon points="60,3 72,8 60,13" fill="#1d4ed8"/></svg><br/><em style="font-size:8.5pt;color:#1d4ed8">«include»</em></td>
+        <td><span class="uc-id">UC-14</span> Upload Image</td>
+        <td>Every submission always uploads at least one photo. UC-06 cannot complete without this step.</td>
+      </tr>
+      <tr>
+        <td><span class="uc-id">UC-10</span> Report Content</td>
+        <td><svg width="80" height="16" style="vertical-align:middle"><line x1="0" y1="8" x2="62" y2="8" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="5,3"/><polygon points="60,3 72,8 60,13" fill="#1d4ed8"/></svg><br/><em style="font-size:8.5pt;color:#1d4ed8">«include»</em></td>
+        <td><span class="uc-id">UC-11</span> Moderate Content</td>
+        <td>Every report automatically logs a moderation task and notifies the administrator.</td>
+      </tr>
+      <tr>
+        <td><span class="uc-id">UC-04</span> Search &amp; Filter</td>
+        <td><svg width="80" height="16" style="vertical-align:middle"><line x1="0" y1="8" x2="62" y2="8" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="5,3"/><polygon points="60,3 72,8 60,13" fill="#1d4ed8"/></svg><br/><em style="font-size:8.5pt;color:#1d4ed8">«extend»</em></td>
+        <td><span class="uc-id">UC-03</span> Browse Destinations</td>
+        <td>Searching and filtering is an optional extension of basic browsing — users can browse without using filters.</td>
+      </tr>
+      <tr>
+        <td><span class="uc-id">UC-07</span> Rate &amp; Review</td>
+        <td><svg width="80" height="16" style="vertical-align:middle"><line x1="0" y1="8" x2="62" y2="8" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="5,3"/><polygon points="60,3 72,8 60,13" fill="#1d4ed8"/></svg><br/><em style="font-size:8.5pt;color:#1d4ed8">«extend»</em></td>
+        <td><span class="uc-id">UC-05</span> View Destination Detail</td>
+        <td>Rating is optional. A user can view a destination without rating it, but rating always starts from the detail page.</td>
+      </tr>
+      <tr>
+        <td><span class="uc-id">UC-01</span> Register</td>
+        <td><svg width="80" height="16" style="vertical-align:middle"><line x1="0" y1="8" x2="62" y2="8" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="5,3"/><polygon points="60,3 72,8 60,13" fill="#1d4ed8"/></svg><br/><em style="font-size:8.5pt;color:#1d4ed8">«extend»</em></td>
+        <td><span class="uc-id">UC-02</span> Login</td>
+        <td>After successful registration a user automatically extends into the Login flow to begin their session.</td>
+      </tr>
+      <tr>
+        <td><strong>Registered Traveller</strong> (actor)</td>
+        <td><svg width="80" height="16" style="vertical-align:middle"><line x1="72" y1="8" x2="10" y2="8" stroke="#7c3aed" stroke-width="2"/><polygon points="12,3 0,8 12,13" fill="#fff" stroke="#7c3aed" stroke-width="1.5"/></svg><br/><em style="font-size:8.5pt;color:#7c3aed">Generalization</em></td>
+        <td><strong>Guest User</strong> (actor)</td>
+        <td>Registered Traveller is a specialisation of Guest User — inherits all Guest capabilities (browse, search, view) and adds protected features.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="footer">
+  ExploreWorld Platform &nbsp;·&nbsp; Use Case Diagram &amp; Specification v1.0 &nbsp;·&nbsp; April 2026
+  &nbsp;·&nbsp; React.js · Node.js · Express.js · MongoDB
+</div>
+
+</body>
+</html>
