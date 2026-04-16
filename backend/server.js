@@ -29,8 +29,30 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/destinations', require('./routes/destinations'));
 app.use('/api/reviews', require('./routes/reviews'));
 
+// Root
+app.get('/', (req, res) => res.json({
+  name: 'ExploreWorld API',
+  version: '2.0.0',
+  status: 'running',
+  db: 'MongoDB Atlas',
+  endpoints: [
+    'GET  /api/health',
+    'GET  /api/destinations',
+    'GET  /api/destinations/featured',
+    'GET  /api/destinations/stats',
+    'GET  /api/destinations/:id',
+    'POST /api/destinations',
+    'POST /api/auth/register',
+    'POST /api/auth/login',
+    'GET  /api/auth/me',
+    'PUT  /api/auth/profile',
+    'GET  /api/reviews/destination/:id',
+    'POST /api/reviews',
+  ],
+}));
+
 // Health check
-app.get('/api/health', (req, res) => res.json({ status: 'ExploreWorld API running', version: '2.0.0', db: 'MongoDB' }));
+app.get('/api/health', (req, res) => res.json({ status: 'ExploreWorld API running', version: '2.0.0', db: 'MongoDB Atlas' }));
 
 // 404 handler
 app.use((req, res) => res.status(404).json({ message: 'Route not found' }));
