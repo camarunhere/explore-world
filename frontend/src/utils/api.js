@@ -21,11 +21,11 @@ export const api = {
   // Destinations
   getDestinations: (params = {}) => {
     const qs = new URLSearchParams(params).toString();
-    return fetch(`${BASE}/destinations${qs ? '?' + qs : ''}`, { headers: headers() }).then(handleRes);
+    return fetch(`${BASE}/destinations${qs ? '?' + qs : ''}`, { headers: headers(true) }).then(handleRes);
   },
   getFeatured: () => fetch(`${BASE}/destinations/featured`, { headers: headers() }).then(handleRes),
   getStats: () => fetch(`${BASE}/destinations/stats`, { headers: headers() }).then(handleRes),
-  getDestination: (id) => fetch(`${BASE}/destinations/${id}`, { headers: headers() }).then(handleRes),
+  getDestination: (id) => fetch(`${BASE}/destinations/${id}`, { headers: headers(true) }).then(handleRes),
   saveDestination: (id) =>
     fetch(`${BASE}/destinations/${id}/save`, { method: 'POST', headers: headers(true) }).then(handleRes),
   createDestination: (data) =>

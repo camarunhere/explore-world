@@ -4,7 +4,7 @@ const { protect } = require('../middleware/auth');
 const Destination = require('../models/Destination');
 
 // GET /api/destinations
-router.get('/', async (req, res) => {
+router.get('/', protect, async (req, res) => {
   try {
     const { continent, activity_type, difficulty_level, search, sort, min_cost, max_cost } = req.query;
     const filter = {};
@@ -88,7 +88,7 @@ router.get('/stats', async (req, res) => {
 });
 
 // GET /api/destinations/:id
-router.get('/:id', async (req, res) => {
+router.get('/:id', protect, async (req, res) => {
   try {
     const dest = await Destination.findOneAndUpdate(
       { destination_id: req.params.id },

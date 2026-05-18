@@ -5,3 +5,4 @@ backend/.env
 .env
 dist/
 frontend/dist/
+.claude/

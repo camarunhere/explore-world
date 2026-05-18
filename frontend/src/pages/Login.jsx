@@ -35,11 +35,6 @@ export default function Login() {
     }
   };
 
-  const fillDemo = () => {
-    setForm({ email: 'demo@exploreworld.com', password: 'password' });
-    setError('');
-  };
-
   return (
     <div className="auth-page">
       <div className="auth-bg">
@@ -113,13 +108,6 @@ export default function Login() {
               )}
             </button>
           </form>
-
-          <div className="auth-divider"><span>or</span></div>
-
-          <button className="btn btn-secondary btn-full demo-btn" onClick={fillDemo}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            Fill Demo Credentials
-          </button>
 
           <p className="auth-switch">
             Don't have an account?{' '}
