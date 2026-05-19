@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
   avg_rating_given: { type: Number, default: 0 },
   wishlist_count: { type: Number, default: 0 },
   account_status: { type: String, default: 'Active' },
+  role: { type: String, default: 'user' },
   join_date: { type: String },
   avatar: { type: String },
 }, { timestamps: true });

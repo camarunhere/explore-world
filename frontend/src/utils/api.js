@@ -40,6 +40,14 @@ export const api = {
   updateProfile: (data) =>
     fetch(`${BASE}/auth/profile`, { method: 'PUT', headers: headers(true), body: JSON.stringify(data) }).then(handleRes),
 
+  // Admin
+  getAdminDestinations: () => fetch(`${BASE}/admin/destinations`, { headers: headers(true) }).then(handleRes),
+  getAdminStats: () => fetch(`${BASE}/admin/stats`, { headers: headers(true) }).then(handleRes),
+  updateDestinationStatus: (id, status) =>
+    fetch(`${BASE}/destinations/${id}/status`, { method: 'PATCH', headers: headers(true), body: JSON.stringify({ status }) }).then(handleRes),
+  deleteDestination: (id) =>
+    fetch(`${BASE}/destinations/${id}`, { method: 'DELETE', headers: headers(true) }).then(handleRes),
+
   // Reviews
   getReviews: (destId) => fetch(`${BASE}/reviews/destination/${destId}`, { headers: headers() }).then(handleRes),
   getUserReviews: (userId) => fetch(`${BASE}/reviews/user/${userId}`, { headers: headers() }).then(handleRes),

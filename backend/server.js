@@ -40,6 +40,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/destinations', require('./routes/destinations'));
 app.use('/api/reviews', require('./routes/reviews'));
+app.use('/api/admin', require('./routes/admin'));
 
 // Root
 app.get('/', (req, res) => res.json({

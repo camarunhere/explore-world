@@ -7,7 +7,7 @@ const User = require('../models/User');
 
 const signToken = (user) =>
   jwt.sign(
-    { id: user._id.toString(), email: user.email, full_name: user.full_name },
+    { id: user._id.toString(), email: user.email, full_name: user.full_name, role: user.role || 'user' },
     JWT_SECRET,
     { expiresIn: '30d' }
   );
@@ -32,6 +32,7 @@ router.post('/register', async (req, res) => {
     if (existing) return res.status(409).json({ message: 'Email already registered' });
 
     const hashed = await bcrypt.hash(password, 10);
+    const isAdmin = process.env.ADMIN_EMAIL && email.toLowerCase() === process.env.ADMIN_EMAIL.toLowerCase();
     const newUser = await User.create({
       full_name,
       email: email.toLowerCase(),
@@ -40,6 +41,7 @@ router.post('/register', async (req, res) => {
       bio: bio || '',
       travel_experience_level: 'Beginner',
       account_status: 'Active',
+      role: isAdmin ? 'admin' : 'user',
       join_date: new Date().toISOString().split('T')[0],
       avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(full_name)}&background=10b981&color=fff&size=128`,
     });

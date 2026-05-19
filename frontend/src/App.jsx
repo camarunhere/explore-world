@@ -11,12 +11,20 @@ import Register from './pages/Register';
 import Profile from './pages/Profile';
 import Submit from './pages/Submit';
 import About from './pages/About';
+import Admin from './pages/Admin';
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
   const location = useLocation();
   if (loading) return <div className="loading-container"><div className="spinner" /></div>;
   if (!user) return <Navigate to="/login" state={{ from: location.pathname }} replace />;
+  return children;
+}
+
+function AdminRoute({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) return <div className="loading-container"><div className="spinner" /></div>;
+  if (!user || user.role !== 'admin') return <Navigate to="/" replace />;
   return children;
 }
 
@@ -41,6 +49,7 @@ function AppLayout() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/submit" element={<Submit />} />
           <Route path="/about" element={<About />} />
+          <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
         </Routes>
       </main>
       <Footer />

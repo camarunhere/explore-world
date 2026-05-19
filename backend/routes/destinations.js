@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { protect } = require('../middleware/auth');
+const { protect, adminOnly } = require('../middleware/auth');
 const Destination = require('../models/Destination');
 
 // GET /api/destinations
@@ -166,6 +166,35 @@ router.post('/:id/save', protect, async (req, res) => {
     );
     if (!dest) return res.status(404).json({ message: 'Destination not found' });
     res.json({ total_saves: dest.total_saves });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// PATCH /api/destinations/:id/status (admin only)
+router.patch('/:id/status', protect, adminOnly, async (req, res) => {
+  try {
+    const { status } = req.body;
+    if (!['Approved', 'Rejected', 'Pending'].includes(status))
+      return res.status(400).json({ message: 'Invalid status' });
+    const dest = await Destination.findOneAndUpdate(
+      { destination_id: req.params.id },
+      { post_status: status },
+      { new: true }
+    );
+    if (!dest) return res.status(404).json({ message: 'Destination not found' });
+    res.json(dest);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// DELETE /api/destinations/:id (admin only)
+router.delete('/:id', protect, adminOnly, async (req, res) => {
+  try {
+    const dest = await Destination.findOneAndDelete({ destination_id: req.params.id });
+    if (!dest) return res.status(404).json({ message: 'Destination not found' });
+    res.json({ message: 'Destination deleted' });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
