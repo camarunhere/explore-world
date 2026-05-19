@@ -40,6 +40,9 @@ export const api = {
   updateProfile: (data) =>
     fetch(`${BASE}/auth/profile`, { method: 'PUT', headers: headers(true), body: JSON.stringify(data) }).then(handleRes),
 
+  updateDestination: (id, data) =>
+    fetch(`${BASE}/destinations/${id}`, { method: 'PUT', headers: headers(true), body: JSON.stringify(data) }).then(handleRes),
+
   // Admin
   getAdminDestinations: () => fetch(`${BASE}/admin/destinations`, { headers: headers(true) }).then(handleRes),
   getAdminStats: () => fetch(`${BASE}/admin/stats`, { headers: headers(true) }).then(handleRes),

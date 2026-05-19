@@ -61,6 +61,7 @@ export default function DestinationDetail() {
   const [activeImg, setActiveImg] = useState(0);
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   // Review form
   const [showReviewForm, setShowReviewForm] = useState(false);
@@ -76,6 +77,18 @@ export default function DestinationDetail() {
       .catch(() => setDestination(null))
       .finally(() => setLoading(false));
   }, [id]);
+
+  const handleDelete = async () => {
+    if (!window.confirm(`Delete "${destination.post_title}"? This cannot be undone.`)) return;
+    setDeleting(true);
+    try {
+      await api.deleteDestination(id);
+      navigate('/destinations');
+    } catch (err) {
+      alert(err.message);
+      setDeleting(false);
+    }
+  };
 
   const handleSave = async () => {
     if (!user) { navigate('/login'); return; }
@@ -318,6 +331,23 @@ export default function DestinationDetail() {
                   <svg width="16" height="16" viewBox="0 0 24 24" fill={saved ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
                   {saved ? `Saved (${destination.total_saves + 1})` : `Save Destination (${destination.total_saves})`}
                 </button>
+                {user?.role === 'admin' && (
+                  <>
+                    <Link to={`/destinations/${id}/edit`} className="btn w-full" style={{ background: '#fef3c7', color: '#92400e', border: '1px solid #fcd34d', textAlign: 'center' }}>
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: 6 }}><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                      Edit Destination
+                    </Link>
+                    <button
+                      className="btn w-full"
+                      style={{ background: '#fee2e2', color: '#991b1b', border: '1px solid #fca5a5' }}
+                      onClick={handleDelete}
+                      disabled={deleting}
+                    >
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: 6 }}><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                      {deleting ? 'Deleting...' : 'Delete Destination'}
+                    </button>
+                  </>
+                )}
                 <Link to="/destinations" className="btn btn-secondary w-full">
                   ← Back to Destinations
                 </Link>

@@ -71,7 +71,10 @@ export default function Navbar() {
                     <div className="dropdown-header">
                       <img src={user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.full_name)}&background=10b981&color=fff`} alt={user.full_name} />
                       <div>
-                        <div className="dropdown-name">{user.full_name}</div>
+                        <div className="dropdown-name">
+                          {user.full_name}
+                          {user.role === 'admin' && <span style={{ marginLeft: 6, background: '#7c3aed', color: '#fff', fontSize: '0.65rem', padding: '1px 7px', borderRadius: 20, fontWeight: 700, letterSpacing: '0.05em', verticalAlign: 'middle' }}>ADMIN</span>}
+                        </div>
                         <div className="dropdown-email">{user.email}</div>
                       </div>
                     </div>

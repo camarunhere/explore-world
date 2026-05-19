@@ -171,6 +171,34 @@ router.post('/:id/save', protect, async (req, res) => {
   }
 });
 
+// PUT /api/destinations/:id (admin only)
+router.put('/:id', protect, adminOnly, async (req, res) => {
+  try {
+    const allowed = [
+      'post_title', 'country', 'region', 'continent', 'activity_type', 'difficulty_level',
+      'best_time_to_visit', 'avg_trip_duration_days', 'estimated_cost_usd',
+      'description_summary', 'full_description', 'accessibility', 'accommodation_type',
+      'nearest_major_city', 'distance_from_major_city_km', 'environmental_sensitivity',
+      'tags', 'image', 'is_hidden_gem', 'post_status',
+    ];
+    const updates = {};
+    allowed.forEach((f) => { if (req.body[f] !== undefined) updates[f] = req.body[f]; });
+    if (updates.tags && typeof updates.tags === 'string') {
+      updates.tags = updates.tags.split(',').map((t) => t.trim()).filter(Boolean);
+    }
+    const dest = await Destination.findOneAndUpdate(
+      { destination_id: req.params.id },
+      updates,
+      { new: true }
+    );
+    if (!dest) return res.status(404).json({ message: 'Destination not found' });
+    res.json(dest);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // PATCH /api/destinations/:id/status (admin only)
 router.patch('/:id/status', protect, adminOnly, async (req, res) => {
   try {
