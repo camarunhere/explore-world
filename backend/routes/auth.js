@@ -107,4 +107,41 @@ router.put('/profile', protect, async (req, res) => {
   }
 });
 
+// POST /api/auth/saved/:destinationId — toggle save/unsave
+router.post('/saved/:destinationId', protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const id = req.params.destinationId;
+    const isSaved = user.saved_destinations.includes(id);
+
+    if (isSaved) {
+      user.saved_destinations = user.saved_destinations.filter((d) => d !== id);
+    } else {
+      user.saved_destinations.push(id);
+    }
+    await user.save();
+    res.json({ saved: !isSaved, saved_destinations: user.saved_destinations });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// GET /api/auth/saved — get all saved destinations with full details
+router.get('/saved', protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('saved_destinations');
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const Destination = require('../models/Destination');
+    const destinations = await Destination.find({
+      destination_id: { $in: user.saved_destinations },
+    }).lean();
+    res.json(destinations);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 module.exports = router;

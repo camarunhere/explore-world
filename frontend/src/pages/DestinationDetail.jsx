@@ -78,6 +78,14 @@ export default function DestinationDetail() {
       .finally(() => setLoading(false));
   }, [id]);
 
+  useEffect(() => {
+    if (user) {
+      api.getSaved().then((saved) => {
+        setSaved(saved.some((d) => d.destination_id === id));
+      }).catch(() => {});
+    }
+  }, [id, user]);
+
   const handleDelete = async () => {
     if (!window.confirm(`Delete "${destination.post_title}"? This cannot be undone.`)) return;
     setDeleting(true);
@@ -94,8 +102,8 @@ export default function DestinationDetail() {
     if (!user) { navigate('/login'); return; }
     setSaving(true);
     try {
-      await api.saveDestination(id);
-      setSaved(true);
+      const res = await api.toggleSave(id);
+      setSaved(res.saved);
     } catch {} finally { setSaving(false); }
   };
 
@@ -329,7 +337,7 @@ export default function DestinationDetail() {
                   disabled={saving || saved}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill={saved ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-                  {saved ? `Saved (${destination.total_saves + 1})` : `Save Destination (${destination.total_saves})`}
+                  {saved ? 'Unsave Destination' : 'Save Destination'}
                 </button>
                 {user?.role === 'admin' && (
                   <>

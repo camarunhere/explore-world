@@ -43,6 +43,10 @@ export const api = {
   updateDestination: (id, data) =>
     fetch(`${BASE}/destinations/${id}`, { method: 'PUT', headers: headers(true), body: JSON.stringify(data) }).then(handleRes),
 
+  toggleSave: (destinationId) =>
+    fetch(`${BASE}/auth/saved/${destinationId}`, { method: 'POST', headers: headers(true) }).then(handleRes),
+  getSaved: () => fetch(`${BASE}/auth/saved`, { headers: headers(true) }).then(handleRes),
+
   // Admin
   getAdminDestinations: () => fetch(`${BASE}/admin/destinations`, { headers: headers(true) }).then(handleRes),
   getAdminStats: () => fetch(`${BASE}/admin/stats`, { headers: headers(true) }).then(handleRes),

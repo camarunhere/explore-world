@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema({
   wishlist_count: { type: Number, default: 0 },
   account_status: { type: String, default: 'Active' },
   role: { type: String, default: 'user' },
+  saved_destinations: { type: [String], default: [] },
   join_date: { type: String },
   avatar: { type: String },
 }, { timestamps: true });

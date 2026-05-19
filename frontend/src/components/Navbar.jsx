@@ -83,6 +83,10 @@ export default function Navbar() {
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                       My Profile
                     </Link>
+                    <Link to="/saved" className="dropdown-item">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                      Saved Destinations
+                    </Link>
                     <Link to="/submit" className="dropdown-item">
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14"/></svg>
                       Submit Destination
@@ -125,6 +129,7 @@ export default function Navbar() {
           {user ? (
             <>
               <NavLink to="/profile" className="mobile-link">My Profile</NavLink>
+              <NavLink to="/saved" className="mobile-link">Saved Destinations</NavLink>
               <NavLink to="/submit" className="mobile-link">Submit Destination</NavLink>
               {user.role === 'admin' && <NavLink to="/admin" className="mobile-link">Admin Panel</NavLink>}
               <button className="mobile-link logout-mobile" onClick={handleLogout}>Sign Out</button>

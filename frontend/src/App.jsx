@@ -13,6 +13,7 @@ import Submit from './pages/Submit';
 import About from './pages/About';
 import Admin from './pages/Admin';
 import EditDestination from './pages/EditDestination';
+import Saved from './pages/Saved';
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -50,6 +51,7 @@ function AppLayout() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/submit" element={<Submit />} />
           <Route path="/about" element={<About />} />
+          <Route path="/saved" element={<PrivateRoute><Saved /></PrivateRoute>} />
           <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
           <Route path="/destinations/:id/edit" element={<AdminRoute><EditDestination /></AdminRoute>} />
         </Routes>
