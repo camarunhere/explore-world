@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../utils/api';
+import { useAuth } from '../context/AuthContext';
 import DestinationCard from '../components/DestinationCard';
 import './Home.css';
 
@@ -47,6 +48,7 @@ function Counter({ target, suffix = '' }) {
 }
 
 export default function Home() {
+  const { user } = useAuth();
   const [featured, setFeatured] = useState([]);
   const [stats, setStats] = useState(null);
   const [search, setSearch] = useState('');
@@ -54,11 +56,14 @@ export default function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    Promise.all([api.getFeatured(), api.getStats()])
+    const requests = user
+      ? Promise.all([api.getFeatured(), api.getStats()])
+      : Promise.all([Promise.resolve([]), api.getStats()]);
+    requests
       .then(([feat, st]) => { setFeatured(feat); setStats(st); })
       .catch(console.error)
       .finally(() => setLoading(false));
-  }, []);
+  }, [user]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -192,7 +197,17 @@ export default function Home() {
             <p>The highest-rated destinations shared by our community — each one a true off-the-beaten-path experience.</p>
           </div>
 
-          {loading ? (
+          {!user ? (
+            <div className="empty-state" style={{ padding: '48px 24px', background: 'var(--bg-secondary, #f9fafb)', borderRadius: 16, border: '1px solid var(--border, #e5e7eb)' }}>
+              <div className="icon" style={{ fontSize: '2.5rem' }}>🔒</div>
+              <h3>Sign in to explore featured destinations</h3>
+              <p>Create a free account to discover hidden gems from around the world.</p>
+              <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 20 }}>
+                <Link to="/login" className="btn btn-primary">Sign In</Link>
+                <Link to="/register" className="btn btn-secondary">Create Account</Link>
+              </div>
+            </div>
+          ) : loading ? (
             <div className="loading-container">
               <div className="spinner" />
               <p>Loading destinations...</p>

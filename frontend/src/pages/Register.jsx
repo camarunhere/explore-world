@@ -1,11 +1,9 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
 import { api } from '../utils/api';
 import './Auth.css';
 
 export default function Register() {
-  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
@@ -38,9 +36,8 @@ export default function Register() {
     if (form.password.length < 6) { setError('Password must be at least 6 characters.'); return; }
     setLoading(true);
     try {
-      const data = await api.register({ full_name: form.name, email: form.email, password: form.password });
-      login(data.token, data.user);
-      navigate('/', { replace: true });
+      await api.register({ full_name: form.name, email: form.email, password: form.password });
+      navigate('/login', { state: { registered: true }, replace: true });
     } catch (err) {
       setError(err.message || 'Registration failed. Please try again.');
     } finally {

@@ -23,7 +23,7 @@ export const api = {
     const qs = new URLSearchParams(params).toString();
     return fetch(`${BASE}/destinations${qs ? '?' + qs : ''}`, { headers: headers(true) }).then(handleRes);
   },
-  getFeatured: () => fetch(`${BASE}/destinations/featured`, { headers: headers() }).then(handleRes),
+  getFeatured: () => fetch(`${BASE}/destinations/featured`, { headers: headers(true) }).then(handleRes),
   getStats: () => fetch(`${BASE}/destinations/stats`, { headers: headers() }).then(handleRes),
   getDestination: (id) => fetch(`${BASE}/destinations/${id}`, { headers: headers(true) }).then(handleRes),
   saveDestination: (id) =>

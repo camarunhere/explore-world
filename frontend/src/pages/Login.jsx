@@ -9,6 +9,7 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from || '/';
+  const registered = location.state?.registered || false;
 
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
@@ -57,6 +58,12 @@ export default function Login() {
             <h1 className="auth-title">Welcome back</h1>
             <p className="auth-subtitle">Sign in to continue your journey</p>
           </div>
+
+          {registered && (
+            <div className="auth-alert" style={{ background: '#d1fae5', color: '#065f46', border: '1px solid #6ee7b7', borderRadius: 10, padding: '12px 16px', marginBottom: 16, fontSize: '0.9rem' }}>
+              Account created successfully! Please sign in.
+            </div>
+          )}
 
           {error && (
             <div className="auth-alert auth-alert-error">

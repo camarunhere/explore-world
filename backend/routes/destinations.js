@@ -44,7 +44,7 @@ router.get('/', protect, async (req, res) => {
 });
 
 // GET /api/destinations/featured
-router.get('/featured', async (req, res) => {
+router.get('/featured', protect, async (req, res) => {
   try {
     const featured = await Destination.find({ avg_rating: { $gte: 4.6 } })
       .sort({ avg_rating: -1 })
